@@ -34,13 +34,23 @@ public class Filter extends OncePerRequestFilter {
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/api/user/login",
-            "/api/user/register",
+            "/api/user/register"
+    );
+
+    private final List<String> PUBLIC_GET_APIS = List.of(
             "/api/test"
     );
 
     private boolean checkIsPublicAPI(String uri) {
         AntPathMatcher pathMatcher = new AntPathMatcher();
         return AUTH_PERMISSION.stream().anyMatch(pattern -> pathMatcher.match(pattern, uri));
+    }
+
+    public boolean isPublicGetAPI(HttpServletRequest request) {
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+        String uri = request.getRequestURI();
+        return "GET".equalsIgnoreCase(request.getMethod()) &&
+                PUBLIC_GET_APIS.stream().anyMatch(pattern -> pathMatcher.match(pattern, uri));
     }
 
     @Autowired
@@ -51,7 +61,8 @@ public class Filter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         boolean isPublicAPI = checkIsPublicAPI(request.getRequestURI());
-        if (isPublicAPI) {
+        boolean isPublicGetAPI = isPublicGetAPI(request);
+        if (isPublicAPI || isPublicGetAPI) {
             // Allow access to public APIs
             filterChain.doFilter(request, response);
         } else {
