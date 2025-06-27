@@ -3,6 +3,7 @@ package com.example.Personality.Controllers;
 import com.example.Personality.Requests.CompleteTestSessionRequest;
 import com.example.Personality.Requests.TestSessionRequest;
 import com.example.Personality.Responses.AnswerReviewResponse;
+import com.example.Personality.Responses.TestResultResponse;
 import com.example.Personality.Responses.TestSessionResponse;
 import com.example.Personality.Services.TestSessionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -45,4 +46,9 @@ public class TestSessionController {
         return ResponseEntity.ok(reviewList);
     }
 
+    @GetMapping("/{sessionId}/result")
+    public ResponseEntity<TestResultResponse> getTestResult(@PathVariable Long sessionId) {
+        TestResultResponse result = testSessionService.getResultSentence(sessionId);
+        return ResponseEntity.ok(result);
+    }
 }

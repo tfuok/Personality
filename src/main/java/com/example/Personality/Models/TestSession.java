@@ -29,6 +29,7 @@ public class TestSession {
 
     private Date endTime;
 
+    @Column(columnDefinition = "TEXT")
     private String result;
 
     @ManyToOne

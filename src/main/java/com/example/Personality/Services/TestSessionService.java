@@ -10,7 +10,9 @@ import com.example.Personality.Repositories.TestSessionRepository;
 import com.example.Personality.Repositories.UserRepository;
 import com.example.Personality.Requests.TestSessionRequest;
 import com.example.Personality.Responses.AnswerReviewResponse;
+import com.example.Personality.Responses.TestResultResponse;
 import com.example.Personality.Responses.TestSessionResponse;
+import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,10 @@ public class TestSessionService {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private OpenRouterService aiService;
+
     public TestSessionResponse createTestSession(TestSessionRequest request) {
         Test test = testRepository.findById(request.getTestId())
                 .orElseThrow(() -> new NotFound("Test not found"));
@@ -50,6 +56,7 @@ public class TestSessionService {
 
         return response;
     }
+
     public void completeTestSession(Long sessionId, Map<Long, Integer> answers) {
         TestSession session = testSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new NotFound("Session not found"));
@@ -58,7 +65,8 @@ public class TestSessionService {
             session.setAnswers(new HashMap<>());
         }
 
-        // Validate và lưu toàn bộ đáp án gửi từ client
+        List<AnswerReviewResponse> reviewList = new ArrayList<>();
+
         for (Map.Entry<Long, Integer> entry : answers.entrySet()) {
             Long questionId = entry.getKey();
             Integer rating = entry.getValue();
@@ -67,15 +75,19 @@ public class TestSessionService {
                 throw new IllegalArgumentException("Mức độ cho phép là từ 1 đến 5");
             }
 
-//            boolean validQuestion = questionRepository.existsByIdAndTestId(questionId, session.getTest().getId());
-//            if (!validQuestion) {
-//                throw new NotFound("Câu hỏi " + questionId + " không thuộc bài thi này");
-//            }
+            String content = questionRepository.findById(questionId)
+                    .map(q -> q.getContent())
+                    .orElse("Nội dung câu hỏi không tồn tại");
 
-            session.getAnswers().put(questionId, rating);
+            session.getAnswers().put(questionId, rating); // lưu vào JSON map
+            reviewList.add(new AnswerReviewResponse(questionId, content, rating)); // truyền cho AI
         }
 
         session.setEndTime(new Date());
+
+        // 🚀 Gọi OpenRouter GPT để phân tích
+        String result = aiService.analyzePersonality(reviewList);
+        session.setResult(result);
 
         testSessionRepository.save(session);
     }
@@ -107,14 +119,15 @@ public class TestSessionService {
         return reviewList;
     }
 
+    public TestResultResponse getResultSentence(Long sessionId) {
+        TestSession session = testSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new NotFound("Session không tồn tại"));
 
-//    //    public void completeTestSession(Long sessionId, String result) {
-//        public void completeTestSession(Long sessionId) {
-//        TestSession session = testSessionRepository.findById(sessionId)
-//                .orElseThrow(() -> new NotFound("Session not found"));
-//
-//        session.setEndTime(new Date());
-////        session.setResult(result);
-//        testSessionRepository.save(session);
-//    }
+        if (session.getResult() == null || session.getResult().isEmpty()) {
+            throw new NotFound("Chưa có kết quả phân tích GPT");
+        }
+        TestResultResponse response = new TestResultResponse();
+        response.setResult(session.getResult());
+        return response;
+    }
 }
