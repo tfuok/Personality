@@ -34,7 +34,9 @@ public class Filter extends OncePerRequestFilter {
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/api/user/login",
-            "/api/user/register"
+            "/api/user/register",
+            "/chat-websocket/**",
+            "/api/messages/**"
     );
 
     private final List<String> PUBLIC_GET_APIS = List.of(

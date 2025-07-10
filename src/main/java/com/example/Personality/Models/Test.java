@@ -2,6 +2,7 @@ package com.example.Personality.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.mysql.cj.protocol.ColumnDefinition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,8 @@ public class Test {
 
     private String title;
 
+    @Lob
+    @Column(columnDefinition ="TEXT")
     private String description;
 
     private boolean isDeleted = false;

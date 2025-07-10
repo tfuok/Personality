@@ -1,6 +1,7 @@
 package com.example.Personality.Services;
 
 import com.example.Personality.Exception.DuplicatedEntity;
+import com.example.Personality.Models.Role;
 import com.example.Personality.Models.User;
 import com.example.Personality.Repositories.UserRepository;
 import com.example.Personality.Requests.LoginRequest;
@@ -86,5 +87,9 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmailAndIsDeletedFalse(email);
+    }
+
+    public User getUserByRole(Role role){
+        return userRepository.findByRole(role);
     }
 }
