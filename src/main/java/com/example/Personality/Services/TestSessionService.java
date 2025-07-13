@@ -10,6 +10,7 @@ import com.example.Personality.Repositories.TestSessionRepository;
 import com.example.Personality.Repositories.UserRepository;
 import com.example.Personality.Requests.TestSessionRequest;
 import com.example.Personality.Responses.AnswerReviewResponse;
+import com.example.Personality.Responses.TestHistoryResponse;
 import com.example.Personality.Responses.TestResultResponse;
 import com.example.Personality.Responses.TestSessionResponse;
 import okhttp3.OkHttpClient;
@@ -119,6 +120,48 @@ public class TestSessionService {
         return reviewList;
     }
 
+    public List<TestHistoryResponse> getTestHistoryByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFound("User không tồn tại"));
+
+        List<TestSession> sessions = testSessionRepository.findByUser(user);
+
+        List<TestHistoryResponse> historyList = new ArrayList<>();
+
+        for (TestSession session : sessions) {
+            Map<Long, Integer> answers = session.getAnswers();
+            if (answers == null || answers.isEmpty()) continue;
+
+            List<AnswerReviewResponse> reviewList = new ArrayList<>();
+            for (Map.Entry<Long, Integer> entry : answers.entrySet()) {
+                Long questionId = entry.getKey();
+                Integer rating = entry.getValue();
+
+                String content = questionRepository.findById(questionId)
+                        .map(q -> q.getContent())
+                        .orElse("Nội dung câu hỏi không tồn tại");
+
+                reviewList.add(new AnswerReviewResponse(questionId, content, rating));
+            }
+
+            TestHistoryResponse history = new TestHistoryResponse();
+            history.setSessionId(session.getId());
+            history.setStartTime(session.getStartTime());
+            history.setEndTime(session.getEndTime());
+            history.setAnswerReviewResponses(reviewList);
+
+            historyList.add(history);
+        }
+
+        if (historyList.isEmpty()) {
+            throw new NotFound("Người dùng chưa có lịch sử làm bài");
+        }
+
+        return historyList;
+    }
+
+
+
     public TestResultResponse getResultSentence(Long sessionId) {
         TestSession session = testSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new NotFound("Session không tồn tại"));
@@ -130,4 +173,6 @@ public class TestSessionService {
         response.setResult(session.getResult());
         return response;
     }
+
+
 }

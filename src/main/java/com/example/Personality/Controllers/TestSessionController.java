@@ -3,6 +3,7 @@ package com.example.Personality.Controllers;
 import com.example.Personality.Requests.CompleteTestSessionRequest;
 import com.example.Personality.Requests.TestSessionRequest;
 import com.example.Personality.Responses.AnswerReviewResponse;
+import com.example.Personality.Responses.TestHistoryResponse;
 import com.example.Personality.Responses.TestResultResponse;
 import com.example.Personality.Responses.TestSessionResponse;
 import com.example.Personality.Services.TestSessionService;
@@ -51,4 +52,11 @@ public class TestSessionController {
         TestResultResponse result = testSessionService.getResultSentence(sessionId);
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/reviews/{userId}")
+    public ResponseEntity<List<TestHistoryResponse>> reviewByUserId(@PathVariable Long userId) {
+        List<TestHistoryResponse> historyList = testSessionService.getTestHistoryByUserId(userId);
+        return ResponseEntity.ok(historyList);
+    }
+
 }
