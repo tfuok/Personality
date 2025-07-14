@@ -14,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 public class Feedback {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

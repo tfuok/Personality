@@ -44,6 +44,8 @@ public class User implements UserDetails {
 
     private boolean isDeleted = false;
 
+    private String parentId;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Test> tests;
@@ -52,12 +54,8 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<TestSession> testSessions;
 
-    @ManyToMany
-    @JoinTable(
-            name = "consulation_users",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "consulation_id")
-    )
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
     private Set<Consulation> consulations = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

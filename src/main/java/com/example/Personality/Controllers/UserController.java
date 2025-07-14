@@ -3,6 +3,7 @@ package com.example.Personality.Controllers;
 import com.example.Personality.Models.User;
 import com.example.Personality.Requests.LoginRequest;
 import com.example.Personality.Requests.RegisterRequest;
+import com.example.Personality.Requests.UpdateRequest;
 import com.example.Personality.Responses.AccountResponse;
 import com.example.Personality.Services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,4 +39,30 @@ public class UserController {
         AccountResponse newAccount = userService.login(loginRequest);
         return ResponseEntity.ok(newAccount);
     }
+
+    @PutMapping("/updateAccount/{id}")
+    public ResponseEntity updateAccount(@RequestBody UpdateRequest request, @PathVariable long id) {
+        User account = userService.updateAccount(request, id);
+        return ResponseEntity.ok("Update Success");
+    }
+    @PostMapping("resetPassword")
+    public ResponseEntity resetPassword(String newPassword) {
+        userService.resetPassword(newPassword);
+        return ResponseEntity.ok("Reset successfully");
+    }
+
+    @PostMapping("/{parentId}/set-student")
+    public ResponseEntity<String> linkStudent(
+            @PathVariable Long parentId, String request
+    ) {
+        userService.linkStudentToParent(parentId, request);
+        return ResponseEntity.ok("Đã gán học sinh cho phụ huynh thành công.");
+    }
+
+    @GetMapping("/{parentId}/children")
+    public ResponseEntity<List<User>> getChildren(@PathVariable Long parentId) {
+        List<User> children = userService.getChildrenOfParent(parentId);
+        return ResponseEntity.ok(children);
+    }
+
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +27,11 @@ public class Consulation {
 
     private Date createAt = new Date();
 
-    @ManyToMany(mappedBy = "consulations")
-    private Set<User> users;
+    @ManyToMany
+    @JoinTable(
+            name = "consulation_users",
+            joinColumns = @JoinColumn(name = "consulation_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> users = new HashSet<>();
 }
