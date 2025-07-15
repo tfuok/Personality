@@ -5,6 +5,7 @@ import com.example.Personality.Models.Consulation;
 import com.example.Personality.Models.User;
 import com.example.Personality.Repositories.ConsulationRepository;
 import com.example.Personality.Repositories.UserRepository;
+import com.example.Personality.Requests.BookingRequest;
 import com.example.Personality.Requests.ConsulationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,6 @@ public class ConsultantService {
     public Consulation createMeeting(ConsulationRequest request) {
         Consulation meeting = new Consulation();
         meeting.setGoogleMeetLink(request.getGoogleMeetURL());
-        meeting.setScheduledTime(request.getScheduleDate());
 
         Set<User> validUsers = new HashSet<>();
         for (String email : request.getConsultMembersEmail()) {
@@ -37,4 +37,5 @@ public class ConsultantService {
 
         return meetingRepository.save(meeting);
     }
+
 }

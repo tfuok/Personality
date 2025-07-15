@@ -8,6 +8,5 @@ import java.util.Set;
 @Data
 public class ConsulationRequest {
     String googleMeetURL;
-    Date scheduleDate;
     Set<String> consultMembersEmail;
 }

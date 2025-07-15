@@ -2,6 +2,7 @@ package com.example.Personality.Controllers;
 
 import com.example.Personality.Models.Consulation;
 import com.example.Personality.Models.Question;
+import com.example.Personality.Requests.BookingRequest;
 import com.example.Personality.Requests.ConsulationRequest;
 import com.example.Personality.Requests.QuestionRequest;
 import com.example.Personality.Services.ConsultantService;
@@ -23,6 +24,5 @@ public class ConsulationController {
         Consulation meeting = consultantService.createMeeting(request);
         return ResponseEntity.ok(meeting);
     }
-
 
 }
