@@ -28,10 +28,16 @@ public class UserController {
         return ResponseEntity.ok(accounts);
     }
 
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<User> getUserById(long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
+    }
+
     @PostMapping("register")
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
-        AccountResponse user = userService.register(registerRequest);
-        return ResponseEntity.ok(user);
+        userService.register(registerRequest);
+        return ResponseEntity.ok("Register successfully!");
     }
 
     @PostMapping("login")

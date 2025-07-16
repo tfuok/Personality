@@ -40,13 +40,17 @@ public class UserService implements UserDetailsService {
         return userRepository.findUserByIsDeletedFalseOrderByRole();
     }
 
-    public AccountResponse register(RegisterRequest registerRequest) {
+    public User getUserById(long id) {
+        return userRepository.findUserByIdAndIsDeletedFalse(id);
+    }
+
+    public void register(RegisterRequest registerRequest) {
         User user = modelMapper.map(registerRequest, User.class);
         try {
             String originPassword = user.getPassword();
             user.setPassword(passwordEncoder.encode(originPassword));
             User newAccount = userRepository.save(user);
-            return modelMapper.map(newAccount, AccountResponse.class);
+            modelMapper.map(newAccount, AccountResponse.class);
         } catch (Exception e) {
             e.printStackTrace();
             if (e.getMessage().contains(user.getEmail())) {
