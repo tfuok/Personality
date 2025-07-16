@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest){
         userService.register(registerRequest);
         return ResponseEntity.ok("Register successfully!");
     }

@@ -28,6 +28,7 @@ public class User implements UserDetails {
     private String fullname;
 
     @Email(message = "Email not valid")
+    @Column(unique = true)
     private String email;
 
     @NotBlank(message = "Password must not be blank!")
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     private Role role;
 
     @Pattern(regexp = "(84|0[3|5|7|8|9])+(\\d{8})", message = "Invalid phone number!")
+    @Column(unique = true)
     private String phone;
 
     private Date createAt = new Date();

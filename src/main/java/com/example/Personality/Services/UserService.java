@@ -12,6 +12,7 @@ import com.example.Personality.Responses.AccountResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,18 +47,29 @@ public class UserService implements UserDetailsService {
 
     public void register(RegisterRequest registerRequest) {
         User user = modelMapper.map(registerRequest, User.class);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new DuplicatedEntity("Email already exists!");
+        }
+        if (userRepository.existsByPhone(user.getPhone())) {
+            throw new DuplicatedEntity("Phone number already exists!");
+        }
         try {
             String originPassword = user.getPassword();
             user.setPassword(passwordEncoder.encode(originPassword));
             User newAccount = userRepository.save(user);
             modelMapper.map(newAccount, AccountResponse.class);
+        } catch (DataIntegrityViolationException e) {
+            // Nếu DB có unique constraint thì lỗi sẽ vào đây
+            if (e.getMessage().toLowerCase().contains("email")) {
+                throw new DuplicatedEntity("Duplicate email!");
+            } else if (e.getMessage().toLowerCase().contains("phone")) {
+                throw new DuplicatedEntity("Duplicate phone!");
+            } else {
+                throw new DuplicatedEntity("Duplicated field!");
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            if (e.getMessage().contains(user.getEmail())) {
-                throw new DuplicatedEntity("Duplicate email!");
-            } else {
-                throw new DuplicatedEntity("Duplicate phone");
-            }
+            throw new RuntimeException("Unknown error during registration.");
         }
     }
 
