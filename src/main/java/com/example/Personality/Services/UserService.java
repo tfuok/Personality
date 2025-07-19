@@ -37,6 +37,13 @@ public class UserService implements UserDetailsService {
     @Autowired
     TokenService tokenService;
 
+    public User deleteUser(long id){
+        User user = userRepository.findUserByIdAndIsDeletedFalse(id);
+        if (user == null) throw new NotFound("User not found");
+        user.setDeleted(true);
+        return userRepository.save(user);
+    }
+
     public List<User> getAllAccount() {
         return userRepository.findUserByIsDeletedFalseOrderByRole();
     }
