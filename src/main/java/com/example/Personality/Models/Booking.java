@@ -29,7 +29,7 @@ public class Booking {
 
     private Date createAt;
 
-    private boolean isDelete = false;
+    private boolean isDeleted = false;
 
 
 }

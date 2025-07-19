@@ -36,7 +36,7 @@ public class BookingService {
         List<Booking> result = new ArrayList<>();
 
         for (Booking booking : allBookings) {
-            if (!booking.isDelete() && String.valueOf(id).equals(booking.getBookBy())) {
+            if (!booking.isDeleted() && String.valueOf(id).equals(booking.getBookBy())) {
                 result.add(booking);
             }
         }
@@ -48,6 +48,10 @@ public class BookingService {
         Booking booking = bookingRepository.findById(id);
         if(booking == null) throw new NotFound("Not found");
 
-        booking.setDelete(true);
+        booking.setDeleted(true);
+    }
+
+    public List<Booking> getAll(){
+        return bookingRepository.findAllByIsDeletedFalse();
     }
 }

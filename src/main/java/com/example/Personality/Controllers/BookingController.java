@@ -35,4 +35,10 @@ public class BookingController {
          bookingService.deleteBooking(id);
         return ResponseEntity.ok("Deleted");
     }
+
+    @GetMapping("/getAll")
+    public ResponseEntity getAll() {
+        List<Booking> bookings = bookingService.getAll();
+        return ResponseEntity.ok(bookings);
+    }
 }
