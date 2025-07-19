@@ -27,6 +27,7 @@ public class Consulation {
 
     private Date createAt = new Date();
 
+    private boolean isDeleted = false;
     @ManyToMany
     @JoinTable(
             name = "consulation_users",

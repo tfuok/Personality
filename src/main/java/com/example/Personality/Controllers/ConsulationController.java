@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/consulation")
 @CrossOrigin("*")
@@ -25,4 +27,21 @@ public class ConsulationController {
         return ResponseEntity.ok(meeting);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Consulation>> getAllMeetings() {
+        List<Consulation> meetings = consultantService.getAll();
+        return ResponseEntity.ok(meetings);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMeeting(@PathVariable long id) {
+        consultantService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Consulation>> getMeetingsByUserId(@PathVariable long userId) {
+        List<Consulation> meetings = consultantService.getByUserId(userId);
+        return ResponseEntity.ok(meetings);
+    }
 }
