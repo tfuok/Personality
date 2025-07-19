@@ -39,4 +39,8 @@ public class Test {
     @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Question> questions;
+
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Feedback> feedbacks;
 }

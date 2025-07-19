@@ -25,7 +25,13 @@ public class Feedback {
 
     private Date createAt = new Date();
 
+    private boolean isDeleted = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "test_id")
+    private Test test;
 }
