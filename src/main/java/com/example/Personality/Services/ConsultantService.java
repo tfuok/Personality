@@ -37,7 +37,7 @@ public class ConsultantService {
 
         meeting.setUsers(validUsers);
         meeting.setDeleted(false);
-
+        meeting.setScheduledTime(request.getScheduledTime());
         return meetingRepository.save(meeting);
     }
 

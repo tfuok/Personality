@@ -9,4 +9,5 @@ import java.util.Set;
 public class ConsulationRequest {
     String googleMeetURL;
     Set<String> consultMembersEmail;
+    Date scheduledTime;
 }

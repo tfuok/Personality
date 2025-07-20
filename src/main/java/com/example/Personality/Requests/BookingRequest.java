@@ -6,7 +6,6 @@ import java.util.Date;
 
 @Data
 public class BookingRequest {
-    String userId;
     Date bookTime;
     String description;
 }

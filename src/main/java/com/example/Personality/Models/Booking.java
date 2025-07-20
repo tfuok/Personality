@@ -1,9 +1,6 @@
 package com.example.Personality.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,13 +20,13 @@ public class Booking {
 
     private Date bookTime;
 
-    private String bookBy;
-
     private String description;
 
     private Date createAt;
 
     private boolean isDeleted = false;
 
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

@@ -64,6 +64,10 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Feedback> feedbacks;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Booking> bookings;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

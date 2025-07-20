@@ -9,5 +9,5 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     Booking findById(long id);
     List<Booking> findAllByIsDeletedFalse();
-
+    List<Booking> findByUserIdAndIsDeletedFalse(long id);
 }

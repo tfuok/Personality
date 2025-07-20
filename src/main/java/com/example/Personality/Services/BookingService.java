@@ -19,10 +19,12 @@ public class BookingService {
     BookingRepository bookingRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    UserService userService;
     public void booking(BookingRequest bookingRequest){
         Booking booking = new Booking();
         booking.setBookTime(bookingRequest.getBookTime());
-        booking.setBookBy(bookingRequest.getUserId());
+        booking.setUser(userService.getCurrentAccount());
         booking.setCreateAt(new Date());
         booking.setDescription(bookingRequest.getDescription());
         bookingRepository.save(booking);
@@ -32,17 +34,12 @@ public class BookingService {
         User user = userRepository.findUserByIdAndIsDeletedFalse(id);
         if(user == null) throw new NotFound("User not exist");
 
-        List<Booking> allBookings = bookingRepository.findAll();
-        List<Booking> result = new ArrayList<>();
+        // Thay vì lấy tất cả bookings và lọc, ta sẽ query trực tiếp để lấy bookings của user có điều kiện isDeleted = false
+        List<Booking> bookings = bookingRepository.findByUserIdAndIsDeletedFalse(id);
 
-        for (Booking booking : allBookings) {
-            if (!booking.isDeleted() && String.valueOf(id).equals(booking.getBookBy())) {
-                result.add(booking);
-            }
-        }
-
-        return result;
+        return bookings;
     }
+
 
     public void deleteBooking(long id){
         Booking booking = bookingRepository.findById(id);
