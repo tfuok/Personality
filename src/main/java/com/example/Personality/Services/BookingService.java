@@ -33,8 +33,6 @@ public class BookingService {
     public List<Booking> getAllById(long id){
         User user = userRepository.findUserByIdAndIsDeletedFalse(id);
         if(user == null) throw new NotFound("User not exist");
-
-        // Thay vì lấy tất cả bookings và lọc, ta sẽ query trực tiếp để lấy bookings của user có điều kiện isDeleted = false
         List<Booking> bookings = bookingRepository.findByUserIdAndIsDeletedFalse(id);
 
         return bookings;

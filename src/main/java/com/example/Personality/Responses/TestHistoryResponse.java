@@ -11,4 +11,7 @@ public class TestHistoryResponse {
     List<AnswerReviewResponse> answerReviewResponses;
     Date startTime;
     Date endTime;
+    String result;
+    Long testId;
+    String title;
 }

@@ -149,7 +149,9 @@ public class TestSessionService {
             history.setStartTime(session.getStartTime());
             history.setEndTime(session.getEndTime());
             history.setAnswerReviewResponses(reviewList);
-
+            history.setResult(session.getResult());
+            history.setTitle(session.getTest().getTitle());
+            history.setTestId(session.getTest().getId());
             historyList.add(history);
         }
 
