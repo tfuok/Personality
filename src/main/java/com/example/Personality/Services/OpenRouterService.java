@@ -83,11 +83,41 @@ public class OpenRouterService {
         }
     }
 
+//    private String buildPrompt(List<AnswerReviewResponse> reviews) {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("Bạn là một chuyên gia hướng nghiệp.\n");
+//        sb.append("Dưới đây là danh sách câu hỏi và mức điểm người dùng chọn (1 đến 5):\n");
+//
+//        int i = 1;
+//        for (AnswerReviewResponse r : reviews) {
+//            sb.append(i++)
+//                    .append(". \"").append(r.getQuestionContent()).append("\" → ")
+//                    .append(r.getSelectedRating()).append("\n");
+//        }
+//
+//        sb.append("\n👉 Dựa vào kết quả trên, hãy trả lại phản hồi JSON đúng định dạng:\n\n");
+//        sb.append("{\n");
+//        sb.append("  \"description\": \"... (tối đa 100 từ và bằng tiếng Việt)\",\n");
+//        sb.append("  \"careers\": [\"Ngành 1\", \"Ngành 2\", \"Ngành 3\"]\n");
+//        sb.append("}\n");
+//
+//        sb.append("Chỉ trả về JSON hợp lệ theo đúng format trên, không thêm giải thích.");
+//
+//        return sb.toString();
+//    }
+
     private String buildPrompt(List<AnswerReviewResponse> reviews) {
         StringBuilder sb = new StringBuilder();
         sb.append("Bạn là một chuyên gia hướng nghiệp.\n");
-        sb.append("Dưới đây là danh sách câu hỏi và mức điểm người dùng chọn (1 đến 5):\n");
+        sb.append("Dựa trên các câu hỏi và điểm người dùng đã chọn, hãy phân tích và đưa ra kết quả phù hợp.\n");
+        sb.append("Chỉ trả lời bằng một chuỗi JSON hợp lệ, đúng định dạng dưới đây, không thêm bất kỳ nội dung nào khác:\n\n");
 
+        sb.append("{\n");
+        sb.append("  \"description\": \"...(Tối đa 100 từ, viết bằng tiếng Việt, mô tả tính cách và xu hướng nghề nghiệp của người dùng)...\",\n");
+        sb.append("  \"careers\": [\"Ngành 1\", \"Ngành 2\", \"Ngành 3\"]\n");
+        sb.append("}\n\n");
+
+        sb.append("==> Danh sách câu hỏi và điểm số:\n");
         int i = 1;
         for (AnswerReviewResponse r : reviews) {
             sb.append(i++)
@@ -95,14 +125,7 @@ public class OpenRouterService {
                     .append(r.getSelectedRating()).append("\n");
         }
 
-        sb.append("\n👉 Dựa vào kết quả trên, hãy trả lại phản hồi JSON đúng định dạng:\n\n");
-        sb.append("{\n");
-        sb.append("  \"description\": \"... (tối đa 100 từ và bằng tiếng Việt)\",\n");
-        sb.append("  \"careers\": [\"Ngành 1\", \"Ngành 2\", \"Ngành 3\"]\n");
-        sb.append("}\n");
-
-        sb.append("Chỉ trả về JSON hợp lệ theo đúng format trên, không thêm giải thích.");
-
         return sb.toString();
     }
+
 }

@@ -23,9 +23,6 @@ public class TestSessionController {
     @Autowired
     private TestSessionService testSessionService;
 
-    /**
-     * API tạo session làm bài thi
-     */
     @PostMapping("/create")
     public ResponseEntity<TestSessionResponse> createSession(@RequestBody TestSessionRequest request) {
         TestSessionResponse response = testSessionService.createTestSession(request);
@@ -39,12 +36,6 @@ public class TestSessionController {
     ) {
         testSessionService.completeTestSession(sessionId, request.getAnswers());
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/{sessionId}/review")
-    public ResponseEntity<List<AnswerReviewResponse>> reviewAnswers(@PathVariable Long sessionId) {
-        List<AnswerReviewResponse> reviewList = testSessionService.getReviewOfSession(sessionId);
-        return ResponseEntity.ok(reviewList);
     }
 
     @GetMapping("/{sessionId}/result")
