@@ -44,6 +44,7 @@ public class BookingService {
         if(booking == null) throw new NotFound("Not found");
 
         booking.setDeleted(true);
+        bookingRepository.save(booking);
     }
 
     public List<Booking> getAll(){
